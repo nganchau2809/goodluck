@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Valentine's Day</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Ensuring canvas stays in the background */
+        }
+
+        .valentine-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 3rem;
+            cursor: pointer;
+            z-index: 2; /* Ensure text/button is on top of the canvas */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .valentine-text {
+            position: relative;
+            display: inline-block;
+            transition: color 0.3s ease;
+            margin-bottom: 30px;
+            font-size: 2.5rem; /* Adjusted font size for better fit */
+        }
+
+        .valentine-text:hover {
+            color: #ff8e8e;
+        }
+
+        .click-btn {
+            padding: 15px 30px;
+            background-color: #ff6b6b;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .click-btn:hover {
+            background-color: #ff8e8e;
+        }
+
+        @keyframes float-btn {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .click-btn {
+            animation: float-btn 2s ease-in-out infinite;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="valentine-container">
+        <div class="valentine-text">I love you so much, Vy</div>
+        <div class="valentine-text">Anh chúc em thi tốt nhé</div>
+        <div class="valentine-text">Có vậy thôi mà hai ngày hai đêm</div>
+        <button class="click-btn" onclick="triggerEffects()">Click Me</button>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // Simplified canvas setup without fireworks initially
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = []; // For storing particles of fireworks
+
+        // Adjust canvas size to the window's size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener("resize", resizeCanvas, false);
+        window.addEventListener("DOMContentLoaded", resizeCanvas, false);
+
+        // Initializing canvas size on page load
+        resizeCanvas();
+
+        // Function to trigger fireworks on button click
+        function triggerEffects() {
+            // Start creating fireworks after button click
+            createFirework();
+            setInterval(createFirework, 1000); // Create fireworks every 200ms indefinitely
+        }
+
+        // Function to create fireworks
+        function createFirework() {
+            const xPoint = Math.random() * (canvas.width - 200) + 100;
+            const yPoint = Math.random() * (canvas.height - 200) + 100;
+            const numParticles = Math.random() * 50 + 100;
+            const color = "rgb(" + (~~(Math.random() * 200 + 55)) + ","
+                + (~~(Math.random() * 200 + 55)) + ","
+                + (~~(Math.random() * 200 + 55)) + ")";
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = new Particle(xPoint, yPoint, color);
+                particles.push(particle);
+            }
+
+            animateFireworks();
+        }
+
+        // Particle constructor
+        function Particle(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.vx = (Math.random() - 0.5) * 10;
+            this.vy = (Math.random() - 0.5) * 10;
+            this.alpha = Math.random() * 0.5 + 0.5;
+            this.color = color;
+            this.size = Math.random() * 4 + 1;
+        }
+
+        // Update the particles and render them on canvas
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            for (let i = 0; i < particles.length; i++) {
+                const particle = particles[i];
+                particle.x += particle.vx;
+                particle.vy += 0.05; // Gravity
+                particle.y += particle.vy;
+                particle.alpha -= 0.01;
+
+                // Remove particles that are no longer visible
+                if (particle.alpha <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                } else {
+                    // Draw particle
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fillStyle = particle.color;
+                    ctx.globalAlpha = particle.alpha;
+                    ctx.fill();
+                    ctx.closePath();
+                    ctx.restore();
+                }
+            }
+
+            if (particles.length > 0) {
+                requestAnimationFrame(animateFireworks); // Continue animating as long as there are particles
+            }
+            document.querySelector('.valentine-container').style.display = 'none';
+
+        }
+    </script>
+</body>
+</html>
