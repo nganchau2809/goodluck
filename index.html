@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Good luck on your test</title>
+    <title>Good luck bae</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -70,6 +70,16 @@
             background-color: #ff8e8e;
         }
 
+        /* Ensure the font size adjusts to screen size */
+        @media screen and (max-width: 600px) {
+            .valentine-text {
+                font-size: 1.5rem; /* Smaller font size on small screens */
+            }
+            .click-btn {
+                font-size: 1rem; /* Smaller button size */
+            }
+        }
+
         @keyframes float-btn {
             0% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -85,7 +95,7 @@
 <body>
     <div class="valentine-container">
         <div class="valentine-text">I love you so much, Vy</div>
-        <div class="valentine-text">Anh chúc em thi tốt nhé</div>
+        <div class="valentine-text" id="babyBlueText">Anh chúc em thi tốt nhé</div>
         <div class="valentine-text">Có vậy thôi mà hai ngày hai đêm</div>
         <button class="click-btn" onclick="triggerEffects()">Click Me</button>
     </div>
@@ -114,7 +124,10 @@
         function triggerEffects() {
             // Start creating fireworks after button click
             createFirework();
-            setInterval(createFirework, 1000); // Create fireworks every 200ms indefinitely
+            setInterval(createFirework, 1000); // Create fireworks every 1000ms indefinitely
+
+            // Hide the valentine container (text + button) after the first click
+            document.querySelector('.valentine-container').style.display = 'none';
         }
 
         // Function to create fireworks
@@ -175,9 +188,10 @@
             if (particles.length > 0) {
                 requestAnimationFrame(animateFireworks); // Continue animating as long as there are particles
             }
-            document.querySelector('.valentine-container').style.display = 'none';
-
         }
+
+        // Change the color of the second line of text
+        document.getElementById('babyBlueText').style.color = '#a2c2e3'; // Baby blue color for this text
     </script>
 </body>
 </html>
